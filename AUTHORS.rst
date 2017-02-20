@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Edgar E. Garcia Cano Castillo <eegkno@gmail.com>
+* Edgar Garcia Cano <eegkno@gmail.com>
 
 Contributors
 ------------

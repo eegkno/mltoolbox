@@ -56,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'mltoolbox'
-copyright = u"2017, Edgar E. Garcia Cano Castillo"
+copyright = u"2017, Edgar Garcia Cano"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -210,7 +210,7 @@ latex_elements = {
 latex_documents = [
     ('index', 'mltoolbox.tex',
      u'mltoolbox Documentation',
-     u'Edgar E. Garcia Cano Castillo', 'manual'),
+     u'Edgar Garcia Cano', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at
@@ -241,7 +241,7 @@ latex_documents = [
 man_pages = [
     ('index', 'mltoolbox',
      u'mltoolbox Documentation',
-     [u'Edgar E. Garcia Cano Castillo'], 1)
+     [u'Edgar Garcia Cano'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -256,7 +256,7 @@ man_pages = [
 texinfo_documents = [
     ('index', 'mltoolbox',
      u'mltoolbox Documentation',
-     u'Edgar E. Garcia Cano Castillo',
+     u'Edgar Garcia Cano',
      'mltoolbox',
      'One line description of project.',
      'Miscellaneous'),
