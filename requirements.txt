@@ -13,5 +13,5 @@ scikit-learn
 matplotlib
 jupyter
 bs4
-pytest-cov
+pytest-cov==2.4.0
 coveralls
