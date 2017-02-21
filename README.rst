@@ -14,8 +14,11 @@ mltoolbox
         :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/eegkno/mltoolbox/shield.svg
-     :target: https://pyup.io/repos/github/eegkno/mltoolbox/
-     :alt: Updates
+        :target: https://pyup.io/repos/github/eegkno/mltoolbox/
+        :alt: Updates
+
+.. image:: https://coveralls.io/repos/github/eegkno/mltoolbox/badge.svg?branch=master
+        :target: https://coveralls.io/github/eegkno/mltoolbox?branch=master
 
 
 Set of tools for ML in Python.

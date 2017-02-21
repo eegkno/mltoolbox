@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = mltoolbox
+include = */mltoolbox/*
+omit =
+	*/setup.py
+	*/travis_pypi_setup.py
