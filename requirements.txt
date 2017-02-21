@@ -14,4 +14,4 @@ matplotlib
 jupyter
 bs4
 pytest-cov
-coveralls
+coveralls==1.1
