@@ -12,6 +12,6 @@ pytest==3.0.6
 scikit-learn
 matplotlib
 jupyter
-bs4
+bs4==0.0.1
 pytest-cov
 coveralls
