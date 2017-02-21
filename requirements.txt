@@ -10,8 +10,7 @@ cryptography==1.7.2
 PyYAML==3.12
 pytest==3.0.6
 scikit-learn==0.18.1
-matplotlib
-jupyter
-bs4
-pytest-cov
-coveralls
+matplotlib==2.0.0
+jupyter==1.0.0
+pytest-cov==2.4.0
+coveralls==1.1
