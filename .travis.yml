@@ -29,5 +29,7 @@ install:
 - pip install coveralls
 language: python
 python: 3.5
-script: tox -e ${TOXENV}
+script: 
+- tox -e ${TOXENV}
+- coverage run --source=mltoolbox
 after_success: coveralls
