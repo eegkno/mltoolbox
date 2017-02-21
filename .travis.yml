@@ -26,9 +26,9 @@ env:
 - TOXENV=py34
 install: 
 - pip install -U tox
-- pip install codecov
+- pip install coverallsc
 language: python
 python: 3.5
 script: 
 - tox -e ${TOXENV}
-after_success: codecov
+after_success: coveralls
