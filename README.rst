@@ -2,10 +2,6 @@
 mltoolbox
 ===============================
 
-
-.. image:: https://img.shields.io/pypi/v/mltoolbox.svg
-        :target: https://pypi.python.org/pypi/mltoolbox
-
 .. image:: https://img.shields.io/travis/eegkno/mltoolbox.svg
         :target: https://travis-ci.org/eegkno/mltoolbox
 
@@ -16,9 +12,6 @@ mltoolbox
 .. image:: https://pyup.io/repos/github/eegkno/mltoolbox/shield.svg
         :target: https://pyup.io/repos/github/eegkno/mltoolbox/
         :alt: Updates
-
-.. image:: https://coveralls.io/repos/github/eegkno/mltoolbox/badge.svg?branch=master
-        :target: https://coveralls.io/github/eegkno/mltoolbox?branch=master
 
 
 Set of tools for ML in Python.
