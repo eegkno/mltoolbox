@@ -31,5 +31,5 @@ language: python
 python: 3.5
 script: 
 - tox -e ${TOXENV}
-- coverage report -m
+  coverage report -m
 after_success: coveralls
