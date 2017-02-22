@@ -13,6 +13,8 @@ mltoolbox
         :target: https://pyup.io/repos/github/eegkno/mltoolbox/
         :alt: Updates
 
+.. image:: https://codecov.io/gh/eegkno/mltoolbox/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/eegkno/mltoolbox
 
 Set of tools for ML in Python.
 
