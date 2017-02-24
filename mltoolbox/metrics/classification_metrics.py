@@ -48,15 +48,15 @@ def compute_classification_scores(y_true, y_pred):
     n_labels = unique_labels(y_true, y_pred).size
 
     accuracy = accuracy_score(y_true, y_pred)
-    precision, recall, f1_score, _ = precision_recall_fscore_support(y_true, y_pred)
+    precision, recall, f1_score, s = precision_recall_fscore_support(y_true, y_pred)
 
     auc_score = None
     if n_labels == 2:
         fpr, tpr, _ = roc_curve(y_true, y_pred)
         auc_score = auc(fpr, tpr)
 
-    return accuracy, np.average(precision), np.average(recall), np.average(f1_score), auc_score
-
+    return accuracy, np.average(precision, weights=s), np.average(recall, weights=s), np.average(f1_score,
+                                                                                                 weights=s), auc_score
 
 # if __name__ == '__main__':
 #     y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
