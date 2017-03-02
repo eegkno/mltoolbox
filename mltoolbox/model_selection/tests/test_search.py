@@ -4,20 +4,16 @@ import numpy as np
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-from sklearn.utils.testing import assert_array_equal
 from sklearn.utils.testing import assert_almost_equal
-from sklearn.utils.testing import assert_raise_message
+from sklearn.utils.testing import assert_array_equal
 from sklearn.utils.testing import assert_equal
-
-from sklearn.metrics import mean_squared_error
+from sklearn.utils.testing import assert_raise_message
 
 from ..search import MultiLearnerCV
 
 # Load the iris dataset and randomly permute it
 iris = datasets.load_iris()
 X, y = iris.data[:, 1:3], iris.target
-
-print(y)
 
 
 def test_multiple_estimator_init():
@@ -74,8 +70,18 @@ def test_multiple_estimator_init():
     msg = "Some models are missing parameters: ['RandomForestClassifier3']"
     assert_raise_message(ValueError, msg, mp.fit, X, y)
 
+    model_params_test = {
+        'RandomForestClassifier': {'n_estimators': [8]}
+    }
+    models_test = {
+        'RandomForestClassifier': RandomForestClassifier()
+    }
+    mp = MultiLearnerCV(models=models_test, params=model_params_test)
+    msg = "Method has to be one of gridsearch"
+    assert_raise_message(ValueError, msg, mp.fit, X, y, method='other')
 
-def test_gridsearch_init():
+
+def test_fit():
     models = {
         'RandomForestClassifier': RandomForestClassifier(random_state=1)
     }
@@ -128,11 +134,12 @@ def test_multiple_predictors():
     assert_almost_equal(accuracy_score(y, y_pred['RandomForestClassifier2']), 0.98, decimal=2)
     assert_array_equal(y_pred['RandomForestClassifier'], y_pred['RandomForestClassifier2'])
 
+
 def test_prob_pred():
     iris = datasets.load_iris()
     X, y = iris.data[0:6, 1:3], iris.target[0:6]
 
-    original_prob = np.array([[1.],[1.],[1.],[1.],[1.],[1.]])
+    original_prob = np.array([[1.], [1.], [1.], [1.], [1.], [1.]])
 
     models = {
         'RandomForestClassifier': RandomForestClassifier(random_state=1)
