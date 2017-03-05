@@ -28,7 +28,14 @@ class MultiLearnerCV(SetLogger):
             1 - Info
             2 - Debug
 
-    Examples
+    Attributes
+    ----------
+    grid_searches_ : dict
+        It contains the best estimator calculated after the cross validation. There is one estimator for each
+        model in the `models`dict.
+
+
+    Example
     --------
     >>> from sklearn import datasets
     >>> from sklearn.ensemble import RandomForestClassifier
@@ -57,10 +64,10 @@ class MultiLearnerCV(SetLogger):
 
     def __init__(self, models, params, verbose=0):
         SetLogger.__init__(self, verbose)
-        self.models = models
-        self.params = params
-        self.keys = models.keys()
-        self.grid_searches = {}
+        self.__models = models
+        self.__params = params
+        self.__keys = models.keys()
+        self.grid_searches_ = {}
 
     def fit(self, X, y, method='gridsearch', cv_params=None):
         """ Optimize the hyper parameters.
@@ -88,21 +95,21 @@ class MultiLearnerCV(SetLogger):
             self : object
          """
 
-        if self.models is None or len(self.models) == 0:
+        if self.__models is None or len(self.__models) == 0:
             raise AttributeError('Invalid `models` attribute, `models`'
                                  ' should be a dict of {key: models}')
 
-        if self.params is None or len(self.params) == 0:
+        if self.__params is None or len(self.__params) == 0:
             raise AttributeError('Invalid `params` attribute, `params`'
                                  ' should be a dict of {key: parameters}')
 
-        if len(self.models) != len(self.params):
+        if len(self.__models) != len(self.__params):
             raise AttributeError('Number of models and params must be equal'
                                  '; got %d models, %d params'
-                                 % (len(self.models), len(self.params)))
+                                 % (len(self.__models), len(self.__params)))
 
-        if not set(self.models.keys()).issubset(set(self.params.keys())):
-            missing_params = list(set(self.models.keys()) - set(self.params.keys()))
+        if not set(self.__models.keys()).issubset(set(self.__params.keys())):
+            missing_params = list(set(self.__models.keys()) - set(self.__params.keys()))
             raise ValueError("Some models are missing parameters: %s" % missing_params)
 
         methods = ('gridsearch')
@@ -120,13 +127,13 @@ class MultiLearnerCV(SetLogger):
 
         logging.debug("X: {}, y: {}".format(X.shape, y.shape))
 
-        for key in self.keys:
+        for key in self.__keys:
             logging.info("Running GridSearchCV for: {}".format(key))
-            model = self.models[key]
-            params = self.params[key]
+            model = self.__models[key]
+            params = self.__params[key]
             gs = GridSearchCV(model, params, **cv_params)
             gs.fit(X, y)
-            self.grid_searches[key] = gs
+            self.grid_searches_[key] = gs
 
         logging.info('Total running time: {} s'.format(round(time() - t0, 3)))
         logging.info('+++++++++++++++++++++ END +++++++++++++++++++++')
@@ -148,8 +155,8 @@ class MultiLearnerCV(SetLogger):
             The dictionary contains as key the name of the predictor and as value the prediction.
          """
         y_pred = {}
-        for key in self.keys:
-            y_pred[key] = self.grid_searches[key].predict(X)
+        for key in self.__keys:
+            y_pred[key] = self.grid_searches_[key].predict(X)
         logging.debug('Done.')
         return y_pred
 
@@ -169,8 +176,8 @@ class MultiLearnerCV(SetLogger):
             The dictionary contains as key the name of the predictor and and an array of the probabilities by class.
          """
         y_pred_proba = {}
-        for key in self.keys:
-            y_pred_proba[key] = self.grid_searches[key].predict_proba(X)
+        for key in self.__keys:
+            y_pred_proba[key] = self.grid_searches_[key].predict_proba(X)
         logging.debug('Done.')
         return y_pred_proba
 
