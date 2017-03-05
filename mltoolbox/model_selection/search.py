@@ -16,16 +16,42 @@ class MultiLearnerCV(SetLogger):
 
     Parameters
     ----------
+    models : dict
+        Contains the label : estimator to be used
+
+    params : dict
+        Contains the parameters of the estimator to be optimized
+
     verbose : int
         Level of the logger.
             0 - No messages
             1 - Info
             2 - Debug
 
-
-
     Examples
     --------
+    >>> from sklearn import datasets
+    >>> from sklearn.ensemble import RandomForestClassifier
+    >>> from sklearn.metrics import accuracy_score
+    >>> from sklearn.svm import SVC
+    >>> from mltoolbox.model_selection.search import MultiLearnerCV
+    >>> iris = datasets.load_iris()
+    >>> X, y = iris.data[:, 1:3], iris.target
+    >>> model_params_test = {
+    ...    'RFC': {'n_estimators': [8]},
+    ...    'SVC': {}
+    ... }
+    >>> models_test = {
+    ...    'RFC': RandomForestClassifier(random_state=1),
+    ...    'SVC': SVC(random_state=1)
+    ... }
+    >>> mp = MultiLearnerCV(models=models_test, params=model_params_test)
+    >>> mp.fit(X,y)
+    >>> y_pred = mp.predict(X)
+    >>> print("RFC: {0:.2f}".format(accuracy_score(y, y_pred['RFC'])))
+    RFC: 0.99
+    >>> print("SVC: {0:.2f}".format(accuracy_score(y, y_pred['SVC'])))
+    SVC: 0.96
 
     """
 
@@ -37,9 +63,9 @@ class MultiLearnerCV(SetLogger):
         self.grid_searches = {}
 
     def fit(self, X, y, method='gridsearch', cv_params=None):
-        """ Train the data using GridSearchCV.
+        """ Optimize the hyper parameters.
 
-         Look for the best estimator based on grid search cv. It can be used to train multiple estimators on the
+         Look for the best estimator and its hyper parameters. It can be used to train multiple estimators on the
          same data, for classification or regression.
 
          Parameters
@@ -52,10 +78,10 @@ class MultiLearnerCV(SetLogger):
             Target values.
 
         method : string, [gridsearch (default)]
-            Name of the method to use for the tunning.
+            Name of the method to use for the optimization.
 
         cv_params : dict
-            Parameters to perform the grid search cv.
+            Parameters to perform the  cv.
 
         Returns
         -------
@@ -104,6 +130,7 @@ class MultiLearnerCV(SetLogger):
 
         logging.info('Total running time: {} s'.format(round(time() - t0, 3)))
         logging.info('+++++++++++++++++++++ END +++++++++++++++++++++')
+        logging.debug('Done.')
 
     def predict(self, X):
         """ Performs the prediction based on the best trained estimator.
@@ -150,17 +177,22 @@ class MultiLearnerCV(SetLogger):
 # if __name__ == '__main__':
 #     from sklearn.ensemble import RandomForestClassifier
 #     from sklearn import datasets
+#     from sklearn.metrics import accuracy_score
+#     from sklearn.svm import SVC
 #
 #     iris = datasets.load_iris()
 #     X, y = iris.data[:, 1:3], iris.target
 #
 #     model_params_test = {
-#         'RandomForestClassifier': {'n_estimators': [8]},
-#         'RandomForestClassifier3': {'n_estimators': [8]}
+#         'RFC': {'n_estimators': [8]},
+#         'SVC': {}
 #     }
 #     models_test = {
-#         'RandomForestClassifier': RandomForestClassifier(),
-#         'RandomForestClassifier3': RandomForestClassifier()
+#         'RFC': RandomForestClassifier(random_state=1),
+#         'SVC': SVC(random_state=1)
 #     }
 #     mp = MultiLearnerCV(models=models_test, params=model_params_test)
 #     mp.fit(X,y)
+#     y_pred = mp.predict(X)
+#     print("RFC: {0:.2f}".format(accuracy_score(y, y_pred['RFC'])))
+#     print("SVC: {0:.2f}".format(accuracy_score(y, y_pred['SVC'])))
