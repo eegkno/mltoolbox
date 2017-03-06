@@ -22,6 +22,12 @@ Set of tools for ML in Python.
 * Free software: BSD license
 * Documentation: https://mltoolbox.readthedocs.io.
 
+Installation
+------------
+
+The release version is now available.
+
+    pip install -e git+https://github.com/eegkno/mltoolbox.git@release/v0.1.0#egg=mltoolbox
 
 Features
 --------
@@ -29,7 +35,7 @@ Features
 * TODO
 
 Credits
----------
+-------
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 

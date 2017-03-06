@@ -24,11 +24,13 @@ deploy:
 env:
 - TOXENV=py35
 - TOXENV=py34
-install: 
+install:
 - pip install -U tox
 - pip install codecov
 language: python
 python: 3.5
-script: 
+script:
 - tox -e ${TOXENV}
-after_success: codecov
+after_success:
+- codecov
+- bash <(curl -s https://codecov.io/bash) -t 52f74151-e98c-4c69-8ca0-6bbcd2189254
