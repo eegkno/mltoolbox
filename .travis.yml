@@ -32,5 +32,4 @@ python: 3.5
 script:
 - tox -e ${TOXENV}
 after_success:
-- codecov
 - bash <(curl -s https://codecov.io/bash) -t 52f74151-e98c-4c69-8ca0-6bbcd2189254
