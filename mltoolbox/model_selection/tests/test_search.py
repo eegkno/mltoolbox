@@ -57,7 +57,7 @@ def test_multiple_estimator_init():
            '; got 2 models, 1 params')
     assert_raise_message(AttributeError, msg, mp.fit, X, y)
 
-    # Validate that both dicts have the same keys
+    # Validate that both dicts have the same __keys
     model_params_test = {
         'RandomForestClassifier': {'n_estimators': [8]},
         'RandomForestClassifier2': {'n_estimators': [8]}
@@ -93,13 +93,13 @@ def test_fit():
     # Default splits+
     mp = MultiLearnerCV(models=models, params=model_params)
     mp.fit(X, y)
-    assert_equal(mp.grid_searches['RandomForestClassifier'].n_splits_, 3)
+    assert_equal(mp.grid_searches_['RandomForestClassifier'].n_splits_, 3)
 
     # Custum splits
     cv_params = {'cv': 5}
     mp = MultiLearnerCV(models=models, params=model_params)
     mp.fit(X, y, cv_params=cv_params)
-    assert_equal(mp.grid_searches['RandomForestClassifier'].n_splits_, 5)
+    assert_equal(mp.grid_searches_['RandomForestClassifier'].n_splits_, 5)
 
 
 def test_one_predictor():

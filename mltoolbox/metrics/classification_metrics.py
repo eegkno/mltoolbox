@@ -44,6 +44,13 @@ def compute_classification_scores(y_true, y_pred):
     auc : float
         Computes the area under the ROC curve.
 
+    Example
+    -------
+    >>> from mltoolbox.metrics.classification_metrics import compute_classification_scores
+    >>> y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
+    >>> y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
+    >>> print(np.round(compute_classification_scores(y_true, y_pred), 2))
+    [ 0.7   0.69  0.7   0.68]
     """
     n_labels = unique_labels(y_true, y_pred).size
 
@@ -60,7 +67,7 @@ def compute_classification_scores(y_true, y_pred):
                                                                                                      weights=s)
 
 # if __name__ == '__main__':
-#     y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
-#     y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
+#      y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
+#      y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
 #
-#     print(compute_classification_scores(y_true, y_pred))
+#      print(np.round(compute_classification_scores(y_true, y_pred), 2))
