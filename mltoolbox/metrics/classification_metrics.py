@@ -2,6 +2,7 @@
 
 import numpy as np
 from sklearn.metrics import auc
+from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 from sklearn.metrics import roc_curve
 from sklearn.utils.multiclass import unique_labels
@@ -47,27 +48,39 @@ def compute_classification_scores(y_true, y_pred):
     Example
     -------
     >>> from mltoolbox.metrics.classification_metrics import compute_classification_scores
-    >>> y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
-    >>> y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
+    >>> y_true = np.array([1, 1, 1, 1, 1, 0, 0, 0, 0, 0])
+    >>> y_pred = np.array([1, 1, 1, 1, 1, 0, 0, 0, 0, 1])
     >>> print(np.round(compute_classification_scores(y_true, y_pred), 2))
-    [ 0.7   0.69  0.7   0.68]
+    [ 0.9   0.8   0.83  1.    0.91  0.9 ]
     """
     n_labels = unique_labels(y_true, y_pred).size
 
-    accuracy = accuracy_score(y_true, y_pred)
-    precision, recall, f1_score, s = precision_recall_fscore_support(y_true, y_pred)
-
     if n_labels == 2:
+        CM = confusion_matrix(y_true, y_pred)
+
+        TN = CM[0][0]
+        FN = CM[1][0]
+        TP = CM[1][1]
+        FP = CM[0][1]
+
+        accuracy = (TP + TN) / (TP + TN + FP + FN)
+        specificity = TN / (TN + FP)
+        precision = TP / (TP + FP)
+        recall = TP / (TP + FN)  # sensitivity
+        f1_score = (2 * TP) / (2 * TP + FP + FN)
+
         fpr, tpr, _ = roc_curve(y_true, y_pred)
         auc_score = auc(fpr, tpr)
-        return accuracy, np.average(precision, weights=s), np.average(recall, weights=s), np.average(f1_score,
-                                                                                                     weights=s), auc_score
+        return accuracy, specificity, precision, recall, f1_score, auc_score
     else:
-        return accuracy, np.average(precision, weights=s), np.average(recall, weights=s), np.average(f1_score,
-                                                                                                     weights=s)
+        accuracy = accuracy_score(y_true, y_pred)
+        precision, recall, f1_score, s = precision_recall_fscore_support(y_true, y_pred)
+
+        # return accuracy, np.average(precision, weights=s), np.average(recall, weights=s), np.average(f1_score, weights=s)
+        return accuracy, precision, recall, f1_score
 
 # if __name__ == '__main__':
-#      y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
-#      y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
+#     y_true = np.array([1, 1, 1, 1, 2, 0, 2, 0, 0, 0])
+#     y_pred = np.array([1, 1, 1, 1, 2, 2, 0, 0, 0, 1])
 #
-#      print(np.round(compute_classification_scores(y_true, y_pred), 2))
+#     print(compute_classification_scores(y_true, y_pred))
