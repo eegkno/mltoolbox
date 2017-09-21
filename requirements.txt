@@ -2,14 +2,14 @@ pip==9.0.1
 bumpversion==0.5.3
 wheel==0.30.0
 watchdog==0.8.3
+tox==2.8.2
+Sphinx==1.6.3
 flake8==3.4.1
 coverage==4.4.1
-tox==2.7.0
-Sphinx==1.6.3
 cryptography==2.0.3
 PyYAML==3.12
+scikit-learn==0.19.0
 pytest==3.2.2
-scikit-learn==0.18.1
 matplotlib==2.0.2
 jupyter==1.0.0
 pytest-cov==2.5.1
