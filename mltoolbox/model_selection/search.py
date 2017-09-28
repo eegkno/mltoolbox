@@ -12,7 +12,7 @@ from mltoolbox.base.logs import SetLogger
 # TODO: Include other techniques like RandomizedSearchCV or BayesianOptimization
 
 class MultiLearnerCV(SetLogger):
-    """Compute the grid search cv for a set of estimators
+    """Compute the grid search cv for a set of estimators.
 
     Parameters
     ----------
@@ -32,7 +32,7 @@ class MultiLearnerCV(SetLogger):
     ----------
     grid_searches_ : dict
         It contains the best estimator calculated after the cross validation. There is one estimator for each
-        model in the `models`dict.
+        model in the `models` dict.
 
 
     Example
@@ -72,28 +72,28 @@ class MultiLearnerCV(SetLogger):
     def fit(self, X, y, method='gridsearch', cv_params=None):
         """ Optimize the hyper parameters.
 
-         Look for the best estimator and its hyper parameters. It can be used to train multiple estimators on the
-         same data, for classification or regression.
+            Look for the best estimator and its hyper parameters. It can be used to train multiple estimators on the
+            same data, for classification or regression.
 
-         Parameters
-         ----------
-         X : {array-like}, shape = [n_samples, n_features]
-            Training vectors, where n_samples is the number of samples and
-            n_features is the number of features.
+            Parameters
+            ----------
+            X : {array-like}, shape = [n_samples, n_features]
+                Training vectors, where n_samples is the number of samples and
+                n_features is the number of features.
 
-         y : array-like, shape = [n_samples, n_features]
-            Target values.
+            y : array-like, shape = [n_samples, n_features]
+                Target values.
 
-        method : string, [gridsearch (default)]
-            Name of the method to use for the optimization.
+            method : string, [gridsearch (default)]
+                Name of the method to use for the optimization.
 
-        cv_params : dict
-            Parameters to perform the  cv.
+            cv_params : dict
+                Parameters to perform the  cv.
 
-        Returns
-        -------
-            self : object
-         """
+            Returns
+            -------
+                self : object
+        """
 
         if self.__models is None or len(self.__models) == 0:
             raise AttributeError('Invalid `models` attribute, `models`'
@@ -143,17 +143,17 @@ class MultiLearnerCV(SetLogger):
         """ Performs the prediction based on the best trained estimator.
 
 
-         Parameters
-         ----------
-         X : {array-like}, shape = [n_samples, n_features]
-            Training vectors, where n_samples is the number of samples and
-            n_features is the number of features.
+            Parameters
+            ----------
+            X : {array-like}, shape = [n_samples, n_features]
+                Training vectors, where n_samples is the number of samples and
+             n_features is the number of features.
 
-        Returns
-        -------
-        y_pred : dict {'estimator': array-like}
-            The dictionary contains as key the name of the predictor and as value the prediction.
-         """
+            Returns
+            -------
+            y_pred : dict {'estimator': array-like}
+                The dictionary contains as key the name of the predictor and as value the prediction.
+        """
         y_pred = {}
         for key in self.__keys:
             y_pred[key] = self.grid_searches_[key].predict(X)
@@ -164,17 +164,17 @@ class MultiLearnerCV(SetLogger):
         """ Performs the probability prediction based on the best trained estimator.
 
 
-         Parameters
-         ----------
-         X : {array-like}, shape = [n_samples, n_features]
-            Training vectors, where n_samples is the number of samples and
+            Parameters
+            ----------
+            X : {array-like}, shape = [n_samples, n_features]
+                Training vectors, where n_samples is the number of samples and
                 n_features is the number of features.
 
-        Returns
-        -------
-        y_pred_proba : dict {'estimator': array-like}
-            The dictionary contains as key the name of the predictor and and an array of the probabilities by class.
-         """
+            Returns
+            -------
+            y_pred_proba : dict {'estimator': array-like}
+                The dictionary contains as key the name of the predictor and and an array of the probabilities by class.
+        """
         y_pred_proba = {}
         for key in self.__keys:
             y_pred_proba[key] = self.grid_searches_[key].predict_proba(X)
