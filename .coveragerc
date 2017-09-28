@@ -5,3 +5,6 @@ include = */mltoolbox/*
 omit =
 	*/setup.py
 	*/travis_pypi_setup.py
+    */base/logs.py
+    *__init__.py
+    *.tox

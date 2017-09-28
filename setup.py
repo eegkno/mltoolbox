@@ -19,7 +19,7 @@ test_requirements = [
 
 setup(
     name='mltoolbox',
-    version='0.0.0',
+    version='0.1.0',
     description="Set of tools for ML in Python.",
     long_description=readme + '\n\n' + history,
     author="Edgar Garcia Cano",
