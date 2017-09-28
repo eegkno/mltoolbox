@@ -13,6 +13,7 @@ from mltoolbox.metrics.classification_metrics import compute_classification_scor
 from mltoolbox.model_selection.search import MultiLearnerCV
 from mltoolbox.utils.format import format_results_table
 
+# TODO: Tests with multiclass problem
 
 class MultiClassifier(SetLogger):
     """Train multiple estimators with optimized parameters on a Out-of-Fold
@@ -57,29 +58,30 @@ class MultiClassifier(SetLogger):
     ...    'SVC': {},
     ...    'RandomForestClassifier': {'n_estimators': [8]}
     ... }
+    >>> y_binary_idx = np.where(y != 2)
     >>> mc = MultiClassifier()
-    >>> mc.train(X, y, models, model_params)
+    >>> mc.train(X[y_binary_idx], y[y_binary_idx], models, model_params)
     >>> print(mc.report_score_summary_by_classifier('RandomForestClassifier'))
-                 Accuracy  Precision     Recall   F1-score
+                   Accuracy Specificity  Precision     Recall   F1-score        AUC
     <BLANKLINE>
-            1      0.9667     0.9697     0.9667     0.9666
-            2      0.9667     0.9697     0.9667     0.9666
-            3      0.9333     0.9333     0.9333     0.9333
-            4      0.9667     0.9697     0.9667     0.9666
-            5      1.0000     1.0000     1.0000     1.0000
+              1      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              2      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              3      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              4      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              5      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
     <BLANKLINE>
-      Average      0.9667     0.9685     0.9667     0.9666
+        Average      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
     <BLANKLINE>
     >>> print(mc.report_score_summary_by_classifier('SVC'))
-                 Accuracy  Precision     Recall   F1-score
+                   Accuracy Specificity  Precision     Recall   F1-score        AUC
     <BLANKLINE>
-            1      0.9667     0.9697     0.9667     0.9666
-            2      1.0000     1.0000     1.0000     1.0000
-            3      0.9333     0.9444     0.9333     0.9327
-            4      0.9667     0.9697     0.9667     0.9666
-            5      1.0000     1.0000     1.0000     1.0000
+              1      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              2      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              3      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              4      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+              5      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
     <BLANKLINE>
-      Average      0.9733     0.9768     0.9733     0.9732
+        Average      1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
     <BLANKLINE>
     """
 
@@ -201,7 +203,7 @@ class MultiClassifier(SetLogger):
             self.predict()
 
         if self.__n_labels == 2:
-            results = np.zeros([len(self.__fold_pred), 5])
+            results = np.zeros([len(self.__fold_pred), 6])
         else:
             results = np.zeros([len(self.__fold_pred), 4])
 
@@ -229,7 +231,7 @@ class MultiClassifier(SetLogger):
         results = self.score_summary_by_classifier(classifier_name)
 
         if self.__n_labels == 2:
-            header_names = ['Accuracy', 'Precision', 'Recall', 'F1-score', 'AUC']
+            header_names = ['Accuracy', 'Specificity', 'Precision', 'Recall', 'F1-score', 'AUC']
         else:
             header_names = ['Accuracy', 'Precision', 'Recall', 'F1-score']
 
@@ -269,9 +271,11 @@ class MultiClassifier(SetLogger):
 
         best_model = {}
 
-        if (fold_key is None) or (fold_key not in range(0, results[:, 0].shape[0])):
+        if (fold_key is None) or (fold_key - 1 not in range(0, results[:, 0].shape[0])):
             # Get the highest accuracy
             fold_key = results[:, 0].argmax()
+        else:
+            fold_key = fold_key - 1
 
         # Get the test and training indices of the data
         bm_test_indices = self.__fold_test_index[fold_key]
@@ -283,7 +287,7 @@ class MultiClassifier(SetLogger):
         # Get the prediction
         bm_y_pred = self.__fold_pred[fold_key][classifier_name]
 
-        best_model[classifier_name] = [fold_key, bm_model, bm_y_pred, bm_train_indices, bm_test_indices]
+        best_model[classifier_name] = [fold_key + 1, bm_model, bm_y_pred, bm_train_indices, bm_test_indices]
 
         logging.debug('Done.')
         return best_model
@@ -308,7 +312,6 @@ class MultiClassifier(SetLogger):
         best_model = self.best_estimator(classifier_name, fold_key)
         return best_model[classifier_name][1].feature_importances_
 
-
 # if __name__ == '__main__':
 #     from sklearn import datasets
 #     from sklearn.ensemble import RandomForestClassifier
@@ -326,8 +329,21 @@ class MultiClassifier(SetLogger):
 #         'SVC': {},
 #         'RandomForestClassifier': {'n_estimators': [8]}
 #     }
-#     #
+#
+#     y_binary_idx = np.where(y != 2)
 #     mc = MultiClassifier()
-#     mc.train(X, y, models, model_params)
+#     mc.train(X[y_binary_idx], y[y_binary_idx], models, model_params)
+#
+#     # Compute the best_estimator without previous predict
+#     bs = mc.best_estimator('RandomForestClassifier', 4)['RandomForestClassifier']
+#
+#     print(mc.feature_importances('RandomForestClassifier'))
+#
+#     #assert_equal(bs[0], 4)
+#
+#
 #     print(mc.report_score_summary_by_classifier('RandomForestClassifier'))
-#     print(mc.report_score_summary_by_classifier('SVC'))
+#
+#     text_file = open("tests/test_classification_report_files/report_binary.txt", "w")
+#     text_file.write(report)
+#     text_file.close()
