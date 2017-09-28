@@ -17,12 +17,11 @@ mltoolbox
 =========
 
 mltoolbox is a set of wrapper tools build on top of sciki-learn for the day to day Machine Learning
-experimentation in Python.:
+experimentation in Python.
 
 **Edgar** Eduardo **Garcia Cano** Castillo, 2017
 
 * Free software: BSD license
-* Documentation: https://mltoolbox.readthedocs.io.
 
 
 Installation
@@ -35,9 +34,9 @@ See the complete list of `requeriments.txt <requeriments.txt>`_.
 User installation
 ~~~~~~~~~~~~~~~~~
 
-The pre-release version is now available. To install, use ``pip`` ::
+The current version is now available. To install, use ``pip`` ::
 
-    pip install -e git+https://github.com/eegkno/mltoolbox.git@release/v0.1.0#egg=mltoolbox
+    pip install -e git+https://github.com/eegkno/mltoolbox.git@master#egg=mltoolbox
 
 Testing
 ~~~~~~~
