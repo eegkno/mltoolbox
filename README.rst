@@ -29,7 +29,7 @@ Installation
 
 Dependencies
 ~~~~~~~~~~~~
-See the complete list of `requeriments.txt <requeriments.txt>`_.
+See the complete list of `requirements.txt <requirements.txt>`_.
 
 User installation
 ~~~~~~~~~~~~~~~~~
