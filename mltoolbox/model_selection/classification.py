@@ -13,6 +13,7 @@ from mltoolbox.metrics.classification_metrics import compute_classification_scor
 from mltoolbox.model_selection.search import MultiLearnerCV
 from mltoolbox.utils.format import format_results_table
 
+
 # TODO: Tests with multiclass problem
 
 class MultiClassifier(SetLogger):
@@ -87,6 +88,7 @@ class MultiClassifier(SetLogger):
 
     def __init__(self, n_splits=5, shuffle=False, random_state=None, verbose=0):
         SetLogger.__init__(self, verbose)
+        self.verbose = verbose
         # Divide the data in n-folds
         self.__kf = StratifiedKFold(n_splits=n_splits, shuffle=shuffle, random_state=random_state)
         self.__fold_models = {}
@@ -210,7 +212,7 @@ class MultiClassifier(SetLogger):
         for fold_key in range(len(self.__fold_pred)):
             y_true = self._y[self.__fold_test_index[fold_key]]
             y_pred = self.__fold_pred[fold_key][classifier_name]
-            results[fold_key, :] = np.asarray(compute_classification_scores(y_true, y_pred))
+            results[fold_key, :] = np.asarray(compute_classification_scores(y_true, y_pred, self.verbose))
         logging.debug('Done.')
         return results
 
@@ -229,6 +231,7 @@ class MultiClassifier(SetLogger):
 
         """
         results = self.score_summary_by_classifier(classifier_name)
+        logging.debug(results)
 
         if self.__n_labels == 2:
             header_names = ['Accuracy', 'Specificity', 'Precision', 'Recall', 'F1-score', 'AUC']
@@ -312,38 +315,65 @@ class MultiClassifier(SetLogger):
         best_model = self.best_estimator(classifier_name, fold_key)
         return best_model[classifier_name][1].feature_importances_
 
-# if __name__ == '__main__':
-#     from sklearn import datasets
-#     from sklearn.ensemble import RandomForestClassifier
-#     from sklearn.svm import SVC
-#
-#     iris = datasets.load_iris()
-#     X, y = iris.data[:, 1:4], iris.target
-#
-#     models = {
-#         'SVC': SVC(random_state=1),
-#         'RandomForestClassifier': RandomForestClassifier(random_state=1)
-#     }
-#
-#     model_params = {
-#         'SVC': {},
-#         'RandomForestClassifier': {'n_estimators': [8]}
-#     }
-#
-#     y_binary_idx = np.where(y != 2)
-#     mc = MultiClassifier()
-#     mc.train(X[y_binary_idx], y[y_binary_idx], models, model_params)
-#
-#     # Compute the best_estimator without previous predict
-#     bs = mc.best_estimator('RandomForestClassifier', 4)['RandomForestClassifier']
-#
-#     print(mc.feature_importances('RandomForestClassifier'))
-#
-#     #assert_equal(bs[0], 4)
-#
-#
-#     print(mc.report_score_summary_by_classifier('RandomForestClassifier'))
-#
-#     text_file = open("tests/test_classification_report_files/report_binary.txt", "w")
-#     text_file.write(report)
-#     text_file.close()
+    # if __name__ == '__main__':
+    #     from sklearn import datasets
+    #     from sklearn.ensemble import RandomForestClassifier
+    #     from sklearn.svm import SVC
+    #
+    #     iris = datasets.load_iris()
+    #     X, y = iris.data, iris.target
+    #
+    #     from sklearn import preprocessing
+    #
+    #     std_scale = preprocessing.StandardScaler().fit(X)
+    #     X_std = std_scale.transform(X)
+    #     print('After standardization:{:.4f}, {:.4f}'.format(X_std.mean(), X_std.std()))
+    #
+    #
+    #     random_state = 2017  # seed used by the random number generator
+    #
+    #     models = {
+    #         # NOTE: SVC and RFC are the names that will be used to make reference to the models after the training step.
+    #         'SVC': SVC(probability=True,
+    #                    random_state=random_state),
+    #         'RFC': RandomForestClassifier(random_state=random_state)
+    #     }
+    #
+    #     model_params = {
+    #         'SVC': {'kernel': ['linear']},
+    #         'RFC': {'n_estimators': [25]}
+    #     }
+    #
+    #     cv_params = {
+    #         'cv': StratifiedKFold(n_splits=3, shuffle=False, random_state=random_state)
+    #     }
+    #
+    #     # Training
+    #     mc = MultiClassifier(n_splits=5, shuffle=True, random_state=random_state, verbose=0)
+    #     mc.train(X, y, models, model_params, cv_params=cv_params)
+    #     print('RFC\n{}\n'.format(mc.report_score_summary_by_classifier('RFC')))
+    #
+    #     # Get the results of the parition that has the high accuracy
+    #
+    #     fold, bm_model, bm_y_pred, bm_train_indices, bm_test_indices = mc.best_estimator('RFC')['RFC']
+    #
+    #     print(">>Best model in fold: {}".format(fold))
+    #     print(">>>Trained model \n{}".format(bm_model))
+    #     print(">>>Predicted labels: \n{}".format(bm_y_pred))
+    #     print(">>>Indices of the samples used for training: \n{}".format(bm_train_indices))
+    #     print(">>>Indices of samples used for predicting: \n{}".format(bm_test_indices))
+
+
+    # # Compute the best_estimator without previous predict
+    # bs = mc.best_estimator('RandomForestClassifier', 4)['RandomForestClassifier']
+    #
+    # print(mc.feature_importances('RandomForestClassifier'))
+    #
+    # #assert_equal(bs[0], 4)
+    #
+    #
+    # print(mc.report_score_summary_by_classifier('RandomForestClassifier'))
+    #
+    # text_file = open("tests/test_classification_report_files/report_binary.txt", "w")
+    # text_file.write(report)
+    # text_file.close()
