@@ -80,7 +80,7 @@ def compute_classification_scores(y_true, y_pred, verbose=0):
     else:
         accuracy = accuracy_score(y_true, y_pred)
         precision, recall, f1_score, s = precision_recall_fscore_support(y_true, y_pred, average='weighted')
-        logging.debug(classification_report(y_true, y_pred))
+        logging.debug("\n{}".format(classification_report(y_true, y_pred)))
         return accuracy, np.average(precision, weights=s), np.average(recall, weights=s), np.average(f1_score,
                                                                                                      weights=s)
 # if __name__ == '__main__':
